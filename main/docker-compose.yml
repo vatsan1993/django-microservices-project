@@ -5,12 +5,21 @@ services:
       context: .
       dockerfile: Dockerfile
     environment:
-      - FLASK_APP=main.py
-    # command: /bin/sh -c "flask run --host=0.0.0.0"
+      - FLASK_APP=main:app # ✅ Properly reference app instance
+      - FLASK_ENV=development
+    command: 'python main.py'
     ports:
       - 8001:5000
     volumes:
       - .:/app
+    depends_on:
+      - db
+
+  queue:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: 'python -u consumer.py'
     depends_on:
       - db
 
@@ -19,13 +28,10 @@ services:
     restart: always
     environment:
       MYSQL_DATABASE: main
-      MYSQL_ROOT_PASSWORD: root
       MYSQL_USER: vatsan1993
       MYSQL_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: root
     volumes:
-      - dbdata:/var/lib/mysql
+      - .dbdata:/var/lib/mysql
     ports:
-      - 33067:3306 # Expose MySQL on port 33066 so that local MySQL port is not blocked
-
-volumes:
-  dbdata:
+      - 33067:3306
