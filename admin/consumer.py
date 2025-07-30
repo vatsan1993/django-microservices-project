@@ -1,6 +1,7 @@
 #amqps://cakgpxbg:bnTjHn6fSaH3o7aS1vmenXlJQxHekWTH@seal.lmq.cloudamqp.com/cakgpxbg
-import pika, json, os, django
+import pika, json, os, django, sys
 
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "admin.settings")
 django.setup()
